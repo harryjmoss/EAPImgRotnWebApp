@@ -1,8 +1,7 @@
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse, HTMLResponse, RedirectResponse
 from fastai import *
-from fastai.vision import * 
-
+from fastai.vision import ImageDataBunch, get_transforms, imagenet_stats, load_learner, open_image, models
 import torch
 from pathlib import Path
 from io import BytesIO
@@ -18,9 +17,9 @@ async def get_bytes(url):
             return await response.read()
 
 
-app = Starlette()
+app = Starlette(debug=True)
 path = Path(".")
-preTrainedModel="resnet50_EAP_version6.pkl"
+preTrainedModel="resnet50_EAP_version6_newPyTorch.pkl"
 classes = ["0","90","180","270"]
 
 
@@ -59,9 +58,9 @@ def predict_image_from_bytes(bytes):
     """
     
     img = open_image(BytesIO(bytes))
-    class_, predictions, losses = learn.predict(img) 
+    _, class_,losses = learn.predict(img) 
     return JSONResponse({
-        "class": class_,
+        "prediction": classes[class_.item()],
         "scores": sorted(
             zip(learn.data.classes, map(float, losses)),
             key=lambda p: p[1],
