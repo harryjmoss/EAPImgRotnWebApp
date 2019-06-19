@@ -9,3 +9,40 @@ The 99MB pre-trained model is included in this package and is found within `resn
 
 A `Dockerfile` is included for convenience.
 
+## Deployment
+If deploying on a server, run the Starlette app on the uvicorn ASGI server behind an nginx reverse proxy
+
+```
+cd $APP_DIR
+sudo apt-get install nginx
+(sudo) cp nginx_config_file.conf /etc/nginx/sites-available/default
+sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
+
+```
+*Before this step, edit the nginx config file ip addresses to match your setup*
+
+### Check the health of the config file settings:
+```
+sudo nginx -t
+```
+### Reload nginx if all is ok:
+```
+sudo /etc/nginx/init.d/nginx reload
+```
+
+### Automating things
+
+Check the status of nginx
+
+```
+sudo systemctl status nginx
+```
+
+Start the server
+```
+sudo systemctl start nginx
+```
+
+Configure nginx to automatically start on system startup
+sudo systemctl enable nginx
+ 
