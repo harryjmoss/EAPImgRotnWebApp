@@ -30,7 +30,7 @@ sudo nginx -t
 sudo /etc/nginx/init.d/nginx reload
 ```
 
-### Automating things
+### Automating nginx
 
 Check the status of nginx
 
@@ -44,5 +44,24 @@ sudo systemctl start nginx
 ```
 
 Configure nginx to automatically start on system startup
+```
 sudo systemctl enable nginx
+```
+
+### Run Starlette app on Uvicorn server under supervisor
+
+Included in the directory is a `startServer.sh` bash script that just calls `imgapp.py` in the correct manner. 
+Supervisor should be set up to run this script on startup and in the case of failures. Install and set it up with the following:
+```
+sudo apt-get install supervisor
+cp EAPImgRotnWebApp.conf /etc/supervisor/conf.d / # replace the environment variable with your python path
+sudo service supervisor stop
+sudo service supervisor start
+```
+
+Check supervisor is running the server correctly with 
+```
+sudo supervisorctl
+```
+
  
